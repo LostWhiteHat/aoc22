@@ -1,6 +1,12 @@
+Part 1:
 A, X = Rock
 B, Y = Paper
 C, Z = Scissors
+
+Part 2:
+X = need to Lose
+Y = need to Draw
+Z = need to Win
 
 Point:
 Rock = 1
