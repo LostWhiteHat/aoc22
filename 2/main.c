@@ -98,14 +98,77 @@ void part_two()
     size_t len = 0;
     size_t read;
 
-    struct Round round[2500];
-    struct Round round_element;
+    struct Round round_two[2500];
+    struct Round round_e;
     struct Round reset_round;
     int round_counter = 0;
 
     fptr = fopen("./input.txt", "r");
     if (fptr == NULL)
         exit(EXIT_FAILURE);
+
+    while ((read = getline(&line, &len, fptr)) != -1)
+    {
+        round_e.enemy = line[0];
+        round_e.me = line[2];
+        switch (round_e.me)
+        {
+        case 'X':
+            switch (round_e.enemy)
+            {
+            case 'A':
+                round_e.points += 3;
+                break;
+            case 'B':
+                round_e.points += 1;
+                break;
+            case 'C':
+                round_e.points += 2;
+                break;
+            }
+            break;
+
+        case 'Y':
+            switch (round_e.enemy)
+            {
+            case 'A':
+                round_e.points += 4;
+                break;
+            case 'B':
+                round_e.points += 5;
+                break;
+            case 'C':
+                round_e.points += 6;
+                break;
+            }
+            break;
+
+        case 'Z':
+            switch (round_e.enemy)
+            {
+            case 'A':
+                round_e.points += 8;
+                break;
+            case 'B':
+                round_e.points += 9;
+                break;
+            case 'C':
+                round_e.points += 7;
+                break;
+            }
+            break;
+        }
+        round_two[round_counter] = round_e;
+        round_counter++;
+        round_e = reset_round;
+    }
+
+    int point = 0;
+    for (int i = 0; i < 2500; i++)
+    {
+        point += round_two[i].points;
+    }
+    printf("Part 2: %d\n", point);
 
     fclose(fptr);
     if (line)

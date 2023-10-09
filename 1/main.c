@@ -36,7 +36,6 @@ int main()
                 elfElement.total += elfElement.cal[j];
             }
             elf[elfCounter] = elfElement;
-            // printf("%d\n", elf[elfCounter].total);
             elfCounter++;
             elfElement = resetElf;
             counter = 0;
