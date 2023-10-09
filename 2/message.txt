@@ -1,0 +1,145 @@
+```
+use std::{
+    fs::File,
+    io::{Read, Result},
+    time::Instant,
+};
+#[derive(Debug, PartialEq)]
+#[allow(dead_code)]
+enum State {
+    Rock,
+    Paper,
+    Scissors,
+    Win,
+    Lose,
+    Draw,
+    None,
+}
+impl State {
+    fn new(x: &str) -> Self {
+        match x {
+            "A" => State::Rock,
+            "X" => State::Rock,
+            "B" => State::Paper,
+            "Y" => State::Paper,
+            "C" => State::Scissors,
+            "Z" => State::Scissors,
+            _ => State::None,
+        }
+    }
+    fn new_part2(x: &str) -> Self {
+        match x {
+            "A" => State::Rock,
+            "X" => State::Lose,
+            "B" => State::Paper,
+            "Y" => State::Draw,
+            "C" => State::Scissors,
+            "Z" => State::Win,
+            _ => State::None,
+        }
+    }
+    fn get_points(&self) -> i32 {
+        match self {
+            Self::Rock => 1,
+            Self::Paper => 2,
+            Self::Scissors => 3,
+            _ => 0,
+        }
+    }
+}
+
+#[derive(Debug)]
+struct Turn {
+    oponent: State,
+    my: State,
+    points: i32,
+}
+impl Turn {
+    fn new(oponent: State, my: State) -> Self {
+        Turn {
+            oponent,
+            my,
+            points: 0,
+        }
+    }
+
+    fn count_points(&mut self) {
+        self.points += self.my.get_points();
+        if self.oponent == self.my {
+            self.points += 3;
+            return;
+        }
+        let turn = (&self.my, &self.oponent);
+        match turn {
+            (State::Rock, State::Scissors) => self.points += 6,
+            (State::Paper, State::Rock) => self.points += 6,
+            (State::Scissors, State::Paper) => self.points += 6,
+            _ => (),
+        };
+    }
+    fn change_my(&mut self) {
+        match self.my {
+            State::Win => match self.oponent {
+                State::Rock => self.my = State::Paper,
+                State::Paper => self.my = State::Scissors,
+                State::Scissors => self.my = State::Rock,
+                _ => (),
+            },
+            State::Draw => match self.oponent {
+                State::Rock => self.my = State::Rock,
+                State::Paper => self.my = State::Paper,
+                State::Scissors => self.my = State::Scissors,
+                _ => (),
+            },
+            State::Lose => match self.oponent {
+                State::Rock => self.my = State::Scissors,
+                State::Paper => self.my = State::Rock,
+                State::Scissors => self.my = State::Paper,
+                _ => (),
+            },
+            _ => (),
+        }
+    }
+}
+
+fn main() -> Result<()> {
+    let start = Instant::now();
+    let mut file = File::open("./data").expect("File not Found");
+    let mut content = String::new();
+    file.read_to_string(&mut content)?;
+
+    // Part 1
+    let turns: Vec<Turn> = content
+        .split("\n")
+        .map(|line| {
+            let felds: Vec<&str> = line.split(" ").collect();
+            let mut turn = Turn::new(State::new(felds[0]), State::new(felds[1]));
+            turn.count_points();
+            turn
+        })
+        .collect();
+    let points = turns.iter().fold(0, |acc, x| acc + x.points);
+    println!("{}", points);
+    let end = start.elapsed();
+    println!("{:?}", end);
+
+    // Part 2
+    let start = Instant::now();
+    let turns: Vec<Turn> = content
+        .split("\n")
+        .map(|line| {
+            let felds: Vec<&str> = line.split(" ").collect();
+            let mut turn = Turn::new(State::new(felds[0]), State::new_part2(felds[1]));
+            turn.change_my();
+            turn.count_points();
+            turn
+        })
+        .collect();
+    let points = turns.iter().fold(0, |acc, x| acc + x.points);
+    println!("{}", points);
+    let end = start.elapsed();
+    println!("{:?}", end);
+    Ok(())
+}
+
+```

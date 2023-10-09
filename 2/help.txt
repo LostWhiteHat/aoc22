@@ -1,0 +1,12 @@
+A, X = Rock
+B, Y = Paper
+C, Z = Scissors
+
+Point:
+Rock = 1
+Paper = 2
+Scissors = 3
+
+Lose = 0
+Draw = 3
+Win = 6
