@@ -1,0 +1,3 @@
+Priotiries:
+    Lowercase items: a-z    1-26
+    Uppercase items: A-Z    27-52
